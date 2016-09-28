@@ -10,22 +10,28 @@ script:
 - bundle exec cucumber
 - bundle exec rspec
 
+
+deploy:
+  provider: heroku
+  api_key:
+    secure: c2471f4b-ebb1-41a5-b8d5-487f86458829
+
+  app: travisrails
+
+  on:
+    all_branches: true
+
 deploy:
   provider: heroku
   api_key:
     secure: ${API_KEY}
 
-  app:
-    master: ${APP_NAME}
-    Sprint1: ${TESTAPP_NAME}
-    Sprint2: ${TESTAPP_NAME}
-    Sprint3: ${TESTAPP_NAME}
-    Sprint4: ${TESTAPP_NAME}
 
- # on:
- #     all_branches: true
 
   run:
     - "rake heroku:secrets RAILS_ENV=production"
+    - "rake db:drop"
+    - "rake db:create"
     - "rake db:migrate"
+    - "rake db:seed"
     - "rake assets:precompile"
